@@ -7,6 +7,8 @@ $project   = $_GET['project'] ?? '';
 $contractor = $_GET['contractor'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to   = $_GET['date_to'] ?? '';
+$saved     = $_GET['saved'] ?? '';
+$pdf_id    = $_GET['pdf_id'] ?? '';
 
 $sql = "SELECT * FROM project_visits WHERE 1=1";
 $params = [];
@@ -45,9 +47,19 @@ $records = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Visit Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="assets/style.css" rel="stylesheet">
 </head>
 <body>
+    <?php if ($saved && $pdf_id): ?>
+    <div class="alert alert-success alert-dismissible fade show rounded-0 text-center mb-0" role="alert">
+        <strong>Report saved!</strong> <a href="generate_pdf.php?id=<?= $pdf_id ?>" target="_blank" class="alert-link">Open PDF</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <script>
+        window.open('generate_pdf.php?id=<?= $pdf_id ?>', '_blank');
+    </script>
+    <?php endif; ?>
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0">Visit Reports</h4>
@@ -104,7 +116,7 @@ $records = $stmt->fetchAll();
                                     <th>Date</th>
                                     <th>Project Name</th>
                                     <th>Contractor</th>
-                                    <th>Tehsil</th>
+                                    <th>Tehsil / Town</th>
                                     <th>Submitted</th>
                                     <th>Action</th>
                                 </tr>
@@ -113,14 +125,16 @@ $records = $stmt->fetchAll();
                                 <?php foreach ($records as $i => $r): ?>
                                 <tr>
                                     <td><?= $i + 1 ?></td>
-                                    <td><?= htmlspecialchars($r['visit_no']) ?></td>
-                                    <td><?= htmlspecialchars(date('d-m-Y', strtotime($r['visit_date']))) ?></td>
-                                    <td><?= htmlspecialchars($r['project_name_code']) ?></td>
-                                    <td><?= htmlspecialchars($r['contractor_company']) ?></td>
+                                    <td><?= htmlspecialchars($r['visit_no'] ?: '') ?></td>
+                                    <td><?= $r['visit_date'] ? htmlspecialchars(date('d-m-Y', strtotime($r['visit_date']))) : '' ?></td>
+                                    <td><?= htmlspecialchars($r['project_name_code'] ?: '') ?></td>
+                                    <td><?= htmlspecialchars($r['contractor_company'] ?: '') ?></td>
                                     <td><?= htmlspecialchars($r['tehsil'] ?: '-') ?></td>
                                     <td><?= htmlspecialchars(date('d-m-Y h:i A', strtotime($r['created_at']))) ?></td>
-                                    <td>
-                                        <a href="generate_pdf.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-success" target="_blank">View PDF</a>
+                                    <td class="text-nowrap">
+                                        <a href="generate_pdf.php?id=<?= $r['id'] ?>" class="text-success me-2" title="View PDF" target="_blank"><i class="bi bi-file-pdf fs-5"></i></a>
+                                        <a href="form.php?id=<?= $r['id'] ?>" class="text-primary me-2" title="Edit"><i class="bi bi-pencil fs-5"></i></a>
+                                        <a href="delete.php?id=<?= $r['id'] ?>" class="text-danger" title="Delete" onclick="return confirm('Delete this report?')"><i class="bi bi-trash fs-5"></i></a>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
