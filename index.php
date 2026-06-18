@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/auth_check.php';
 $db = getDB();
 
 $visit_no  = $_GET['visit_no'] ?? '';
@@ -60,9 +61,17 @@ $records = $stmt->fetchAll();
         window.open('generate_pdf.php?id=<?= $pdf_id ?>', '_blank');
     </script>
     <?php endif; ?>
-    <div class="header-bar text-center">
-        <h5>دعوتِ اسلامی</h5>
-        <small>Dawat-e-Islami — Project Visit Reports</small>
+    <div class="header-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <h5>دعوتِ اسلامی</h5>
+                <small>Dawat-e-Islami — Project Visit Reports</small>
+            </div>
+            <div>
+                <a href="change_password.php" class="text-white text-decoration-none me-3" title="Change Password"><i class="bi bi-key"></i></a>
+                <a href="logout.php" class="text-white text-decoration-none" title="Logout"><i class="bi bi-box-arrow-right fs-5"></i></a>
+            </div>
+        </div>
     </div>
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
