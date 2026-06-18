@@ -14,7 +14,7 @@ if (!$r) {
 
 class ReportPDF extends TCPDF {
     public function Header() {
-        $this->SetFont('freeserif', 'B', 24);
+        $this->SetFont('freeserif', 'B', 20);
         $this->Cell(0, 8, 'PROJECT VISIT REPORT', 0, 1, 'C');
         $this->Line(10, $this->GetY(), 200, $this->GetY());
         $this->Ln(4);

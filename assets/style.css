@@ -1,28 +1,128 @@
 body {
-    background: #f4f6f9;
+    background: #f0f5f0;
+}
+
+:root {
+    --bs-primary-rgb: 0, 102, 43;
+    --bs-primary: #00662B;
+    --bs-link-color-rgb: 0, 102, 43;
+}
+
+.header-bar {
+    background: linear-gradient(135deg, #00662B 0%, #00883A 100%);
+    color: #fff;
+    padding: 14px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.header-bar h5 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.header-bar small {
+    opacity: 0.85;
 }
 
 .card {
     border: none;
     border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
 .card-header {
     border-radius: 10px 10px 0 0 !important;
 }
 
+.card-header.bg-primary {
+    background: linear-gradient(135deg, #00662B, #00883A) !important;
+}
+
+.card-header.bg-dark {
+    background: #1a3a1a !important;
+}
+
 .form-label {
     font-weight: 600;
     font-size: 0.9rem;
-    color: #333;
+    color: #2d4a2d;
 }
 
 .table th {
     white-space: nowrap;
 }
 
+.btn-primary {
+    --bs-btn-color: #fff;
+    background: linear-gradient(135deg, #00662B, #00883A) !important;
+    border-color: #00662B !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    --bs-btn-color: #fff;
+    background: linear-gradient(135deg, #005522, #007030) !important;
+    border-color: #005522 !important;
+    color: #fff !important;
+}
+
+.btn-outline-primary {
+    color: #00662B !important;
+    border-color: #00662B !important;
+}
+
+.btn-outline-primary:hover {
+    background: #00662B !important;
+    border-color: #00662B !important;
+    color: #fff !important;
+}
+
+.btn-outline-success {
+    color: #00662B !important;
+    border-color: #00662B !important;
+}
+
+.btn-outline-success:hover {
+    background: #00662B !important;
+    border-color: #00662B !important;
+    color: #fff !important;
+}
+
+.text-primary {
+    color: #00662B !important;
+}
+
+.text-success {
+    color: #00883A !important;
+}
+
+a, a:visited {
+    color: #00662B;
+}
+
+a:hover {
+    color: #005522;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-color: #81c784;
+    color: #1b5e20;
+}
+
+.alert-success .alert-link {
+    color: #00662B !important;
+    font-weight: 700;
+}
+
+.form-control:focus {
+    border-color: #00662B !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 43, 0.25) !important;
+}
+
 @media print {
-    .btn, .card-header a {
+    .btn, .card-header a, .header-bar {
         display: none !important;
     }
 }

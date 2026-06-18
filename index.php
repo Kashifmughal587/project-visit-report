@@ -48,7 +48,7 @@ $records = $stmt->fetchAll();
     <title>Project Visit Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="assets/style.css" rel="stylesheet">
+    <link href="assets/style.css?v=2" rel="stylesheet">
 </head>
 <body>
     <?php if ($saved && $pdf_id): ?>
@@ -60,6 +60,10 @@ $records = $stmt->fetchAll();
         window.open('generate_pdf.php?id=<?= $pdf_id ?>', '_blank');
     </script>
     <?php endif; ?>
+    <div class="header-bar text-center">
+        <h5>دعوتِ اسلامی</h5>
+        <small>Dawat-e-Islami — Project Visit Reports</small>
+    </div>
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0">Visit Reports</h4>
