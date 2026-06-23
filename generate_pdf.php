@@ -18,7 +18,6 @@ class ReportPDF extends TCPDF {
         $this->SetFont('freeserif', 'B', 20);
         $this->Cell(0, 8, 'PROJECT VISIT REPORT', 0, 1, 'C');
         $this->Line(10, $this->GetY(), 200, $this->GetY());
-        $this->Ln(4);
     }
 
     public function Footer() {
@@ -115,13 +114,9 @@ $full_html = '
         <td><b>Previous Visit Date</b></td>
         <td>' . $prev_visit_date . '</td>
     </tr>
-</table>
-<table border="1" cellpadding="8" cellspacing="0" style="width:100%;">
     <tr>
-        <td style="background-color:#003366; color:#ffffff;"><b>REASON FOR VISIT</b></td>
-    </tr>
-    <tr>
-        <td style="padding:8px;">' . nl2br(htmlspecialchars($r['reason_for_visit'] ?: '')) . '<br><br><br></td>
+        <td><b>Reason for Visit</b></td>
+        <td colspan="3">' . nl2br(htmlspecialchars($r['reason_for_visit'] ?: '')) . '</td>
     </tr>
 </table>
 <br>

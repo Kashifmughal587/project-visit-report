@@ -130,6 +130,7 @@ $records = $stmt->fetchAll();
                                     <th>Project Name</th>
                                     <th>Contractor</th>
                                     <th>Tehsil / Town</th>
+                                    <th>Reason for Visit</th>
                                     <th>Submitted</th>
                                     <th>Action</th>
                                 </tr>
@@ -143,6 +144,7 @@ $records = $stmt->fetchAll();
                                     <td><?= htmlspecialchars($r['project_name_code'] ?: '') ?></td>
                                     <td><?= htmlspecialchars($r['contractor_company'] ?: '') ?></td>
                                     <td><?= htmlspecialchars($r['tehsil'] ?: '-') ?></td>
+                                    <td><?= htmlspecialchars($r['reason_for_visit'] ?: '-') ?></td>
                                     <td><?= htmlspecialchars(date('d-m-Y h:i A', strtotime($r['created_at']))) ?></td>
                                     <td class="text-nowrap">
                                         <a href="generate_pdf.php?id=<?= $r['id'] ?>" class="text-success me-2" title="View PDF" target="_blank"><i class="bi bi-file-pdf fs-5"></i></a>
