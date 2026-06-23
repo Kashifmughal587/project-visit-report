@@ -90,8 +90,8 @@ if (empty($witnesses)) {
                         </div>
 
                         <div class="col-md-8">
-                            <label class="form-label">Tehsil / Town, District / Division</label>
-                            <input type="text" name="tehsil" class="form-control" value="<?= htmlspecialchars(($r ? ($r['tehsil'] ?? '') . ($r['tehsil'] && $r['town_district_division'] ? ', ' : '') . ($r['town_district_division'] ?? '') : '')) ?>">
+                            <label class="form-label">Tehsil / Town / District / Division</label>
+                            <input type="text" name="tehsil" class="form-control" value="<?= htmlspecialchars($r['tehsil'] ?? '') ?>">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Name of Contractor / Company</label>

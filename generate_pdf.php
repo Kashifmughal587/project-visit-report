@@ -95,8 +95,8 @@ $full_html = '
         <td colspan="3">' . htmlspecialchars($project_name_code) . '</td>
     </tr>
     <tr>
-        <td><b>Tehsil / Town, District / Division</b></td>
-        <td colspan="3">' . htmlspecialchars(($r['tehsil'] ?: '') . ($r['tehsil'] && $r['town_district_division'] ? ', ' : '') . ($r['town_district_division'] ?: '')) . '</td>
+        <td><b>Tehsil / Town / District / Division</b></td>
+        <td colspan="3">' . htmlspecialchars($r['tehsil'] ?: '') . '</td>
     </tr>
     <tr>
         <td><b>Unit In-Construction Stage</b></td>
