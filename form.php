@@ -89,25 +89,25 @@ if (empty($witnesses)) {
                             <input type="text" name="unit_construction_stage" class="form-control" value="<?= htmlspecialchars($r['unit_construction_stage'] ?? '') ?>">
                         </div>
 
-                        <div class="col-md-8">
+                        <div class="col-12">
                             <label class="form-label">Tehsil / Town / District / Division</label>
                             <input type="text" name="tehsil" class="form-control" value="<?= htmlspecialchars($r['tehsil'] ?? '') ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Name of Contractor / Company</label>
-                            <input type="text" name="contractor_company" class="form-control" value="<?= htmlspecialchars($r['contractor_company'] ?? '') ?>">
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Name of Project Committee Head</label>
                             <input type="text" name="committee_head" class="form-control" value="<?= htmlspecialchars($r['committee_head'] ?? '') ?>">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name of Contractor / Company</label>
+                            <input type="text" name="contractor_company" class="form-control" value="<?= htmlspecialchars($r['contractor_company'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-4">
                             <label class="form-label">Previous Visit Date</label>
                             <input type="date" name="previous_visit_date" class="form-control" value="<?= htmlspecialchars($r['previous_visit_date'] ?? '') ?>">
                         </div>
-
-                        <div class="col-12">
+                        <div class="col-md-8">
                             <label class="form-label">Reason for Visit</label>
                             <textarea name="reason_for_visit" class="form-control" rows="3"><?= htmlspecialchars($r['reason_for_visit'] ?? '') ?></textarea>
                         </div>

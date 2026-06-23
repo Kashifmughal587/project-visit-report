@@ -103,18 +103,16 @@ $full_html = '
         <td colspan="3">' . htmlspecialchars($unit_construction_stage) . '</td>
     </tr>
     <tr>
-        <td><b>Name of Contractor / Company</b></td>
-        <td colspan="3">' . htmlspecialchars($contractor_company) . '</td>
+        <td width="25%"><b>Project Committee Head</b></td>
+        <td width="25%">' . htmlspecialchars($committee_head) . '</td>
+        <td width="20%"><b>Name of Contractor / Company</b></td>
+        <td width="30%">' . htmlspecialchars($contractor_company) . '</td>
     </tr>
     <tr>
-        <td><b>Project Committee Head</b></td>
-        <td>' . htmlspecialchars($committee_head) . '</td>
         <td><b>Previous Visit Date</b></td>
         <td>' . $prev_visit_date . '</td>
-    </tr>
-    <tr>
         <td><b>Reason for Visit</b></td>
-        <td colspan="3">' . nl2br(htmlspecialchars($r['reason_for_visit'] ?: '')) . '</td>
+        <td>' . nl2br(htmlspecialchars($r['reason_for_visit'] ?: '')) . '</td>
     </tr>
 </table>
 <br>
@@ -162,8 +160,5 @@ $full_html = '
 ';
 $pdf->writeHTML($full_html, true, false, true, false, '');
 $pdf->Ln(4);
-
-$pdf->SetFont('freeserif', 'I', 8);
-$pdf->Cell(0, 5, 'Generated on: ' . date('d-m-Y h:i A'), 0, 1, 'R');
 
 $pdf->Output('Project_Visit_Report_' . ($r['visit_no'] ?: '') . '.pdf', 'I');
