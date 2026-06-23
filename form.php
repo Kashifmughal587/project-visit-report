@@ -33,14 +33,18 @@ if (empty($witnesses)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Visit Report - <?= $edit_id ? 'Edit' : 'New' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
     <link href="assets/style.css?v=2" rel="stylesheet">
 </head>
 <body>
     <div class="header-bar">
         <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <h5>دعوتِ اسلامی</h5>
-                <small>Dawat-e-Islami — Project Visit Report</small>
+            <div class="d-flex align-items-center gap-2">
+                <img src="assets/logo.jpeg" alt="Logo" style="height:40px; width:auto;">
+                <div>
+                    <h5 class="mb-0">دعوتِ اسلامی</h5>
+                    <small>Dawat-e-Islami — Project Visit Report</small>
+                </div>
             </div>
             <div>
                 <a href="change_password.php" class="text-white text-decoration-none me-3" title="Change Password"><i class="bi bi-key"></i></a>
@@ -85,13 +89,9 @@ if (empty($witnesses)) {
                             <input type="text" name="unit_construction_stage" class="form-control" value="<?= htmlspecialchars($r['unit_construction_stage'] ?? '') ?>">
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Tehsil / Town</label>
-                            <input type="text" name="tehsil" class="form-control" value="<?= htmlspecialchars($r['tehsil'] ?? '') ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">District / Division</label>
-                            <input type="text" name="town_district_division" class="form-control" value="<?= htmlspecialchars($r['town_district_division'] ?? '') ?>">
+                        <div class="col-md-8">
+                            <label class="form-label">Tehsil / Town, District / Division</label>
+                            <input type="text" name="tehsil" class="form-control" value="<?= htmlspecialchars(($r ? ($r['tehsil'] ?? '') . ($r['tehsil'] && $r['town_district_division'] ? ', ' : '') . ($r['town_district_division'] ?? '') : '')) ?>">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Name of Contractor / Company</label>

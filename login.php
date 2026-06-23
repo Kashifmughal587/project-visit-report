@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login — Project Visit Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
     <link href="assets/style.css?v=2" rel="stylesheet">
     <style>
         .login-wrapper {
@@ -64,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-wrapper">
         <div class="login-card card shadow">
             <div class="card-body p-4 text-center">
-                <div class="login-logo mb-2">دعوتِ اسلامی</div>
+                <img src="assets/logo.jpeg" alt="Dawat-e-Islami" class="mb-3" style="max-height:100px;">
+                <h4 class="mb-1">دعوتِ اسلامی</h4>
                 <p class="text-muted mb-4">Project Visit Reports — Login</p>
                 <?php if ($error): ?>
                     <div class="alert alert-danger py-2"><?= htmlspecialchars($error) ?></div>

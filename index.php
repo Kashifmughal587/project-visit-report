@@ -49,6 +49,7 @@ $records = $stmt->fetchAll();
     <title>Project Visit Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
     <link href="assets/style.css?v=2" rel="stylesheet">
 </head>
 <body>
@@ -63,9 +64,12 @@ $records = $stmt->fetchAll();
     <?php endif; ?>
     <div class="header-bar">
         <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <h5>دعوتِ اسلامی</h5>
-                <small>Dawat-e-Islami — Project Visit Reports</small>
+            <div class="d-flex align-items-center gap-2">
+                <img src="assets/logo.jpeg" alt="Logo" style="height:40px; width:auto;">
+                <div>
+                    <h5 class="mb-0">دعوتِ اسلامی</h5>
+                    <small>Dawat-e-Islami — Project Visit Reports</small>
+                </div>
             </div>
             <div>
                 <a href="change_password.php" class="text-white text-decoration-none me-3" title="Change Password"><i class="bi bi-key"></i></a>

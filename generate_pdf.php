@@ -31,7 +31,7 @@ $pdf = new ReportPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF
 $pdf->SetCreator('Project Visit Report System');
 $pdf->SetAuthor('Planning & Development Department');
 $pdf->SetTitle('Project Visit Report - ' . ($r['visit_no'] ?: ''));
-$pdf->SetMargins(15, 30, 15);
+$pdf->SetMargins(15, 18, 15);
 $pdf->SetAutoPageBreak(true, 20);
 $pdf->AddPage();
 
@@ -95,10 +95,8 @@ $full_html = '
         <td colspan="3">' . htmlspecialchars($project_name_code) . '</td>
     </tr>
     <tr>
-        <td><b>Tehsil / Town</b></td>
-        <td>' . htmlspecialchars($r['tehsil'] ?: '') . '</td>
-        <td><b>District / Division</b></td>
-        <td>' . htmlspecialchars($r['town_district_division'] ?: '') . '</td>
+        <td><b>Tehsil / Town, District / Division</b></td>
+        <td colspan="3">' . htmlspecialchars(($r['tehsil'] ?: '') . ($r['tehsil'] && $r['town_district_division'] ? ', ' : '') . ($r['town_district_division'] ?: '')) . '</td>
     </tr>
     <tr>
         <td><b>Unit In-Construction Stage</b></td>
