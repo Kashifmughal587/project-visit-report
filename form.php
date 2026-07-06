@@ -156,7 +156,13 @@ if (empty($witnesses)) {
 
                         <div class="col-md-6">
                             <label class="form-label">Civil / Site Supervisor's Signature</label>
-                            <input type="text" name="supervisor_signature" class="form-control" value="<?= htmlspecialchars($r['supervisor_signature'] ?? '') ?>" placeholder="Full Name">
+                            <div class="input-group">
+                                <input type="text" name="supervisor_signature" class="form-control" id="supervisor_signature" value="<?= htmlspecialchars($r['supervisor_signature'] ?? '') ?>" placeholder="Full Name">
+                                <div class="input-group-text">
+                                    <input type="checkbox" id="use_aamir_sig" onchange="toggleAamirSig()">
+                                    <label for="use_aamir_sig" class="ms-1 mb-0" style="font-weight:normal;cursor:pointer;">Use Aamir Shehzad's Signature</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -199,6 +205,29 @@ if (empty($witnesses)) {
                 row.querySelector('.remove-witness').disabled = rows.length <= 1;
             });
         }
+
+        function toggleAamirSig() {
+            const cb = document.getElementById('use_aamir_sig');
+            const inp = document.getElementById('supervisor_signature');
+            if (cb.checked) {
+                inp.value = '__AAMIR_SIG__';
+                inp.readOnly = true;
+            } else {
+                inp.value = '';
+                inp.readOnly = false;
+                inp.focus();
+            }
+        }
+
+        // Pre-check checkbox if editing an existing record that uses Aamir signature
+        (function() {
+            const inp = document.getElementById('supervisor_signature');
+            const cb = document.getElementById('use_aamir_sig');
+            if (inp.value === '__AAMIR_SIG__') {
+                cb.checked = true;
+                inp.readOnly = true;
+            }
+        })();
     </script>
 </body>
 </html>

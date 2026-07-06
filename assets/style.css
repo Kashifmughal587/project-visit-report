@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    src: url('fonts/jameel-noori-nastaleeq.ttf') format('truetype');
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.urdu, [lang="ur"], :lang(ur) {
+    font-family: 'Jameel Noori Nastaleeq', 'Traditional Arabic', 'Times New Roman', serif;
+}
+
 body {
     background: #f0f5f0;
 }
