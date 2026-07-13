@@ -31,7 +31,7 @@ $reason     = e($r['reason_for_visit']);
 $activity   = e($r['activity_status']);
 $obstruct   = e($r['obstructions_violations']);
 $manpower   = e($r['manpower_details']);
-$supervisor = e($r['supervisor_signature']);
+$supervisor = e(trim($r['supervisor_signature'] ?? ''));
 $prev_visit = $r['previous_visit_date'] ? date('d-m-Y', strtotime($r['previous_visit_date'])) : '';
 
 $witnesses = [];
@@ -68,40 +68,18 @@ foreach ($witnesses as $w) {
     </tr>';
 }
 
-$fontFile = __DIR__ . '/assets/fonts/' . URDU_FONT;
-$fontUrl = 'file:///' . str_replace(['\\', ' '], ['/', '%20'], $fontFile);
-
-// Aamir Shehzad signature image (base64-embedded so Chrome doesn't need file access)
+// Aamir Shehzad signature
 $sigImgHtml = '';
-$sigImgPath = __DIR__ . '/assets/signatures/aamir_shehzad-signature.png';
+$sigImgPath = __DIR__ . '/assets/signatures/aamir_shehzad_signature_flat.png';
+if (!file_exists($sigImgPath)) { $sigImgPath = __DIR__ . '/assets/signatures/aamir_shehzad_signature.png'; }
 if (file_exists($sigImgPath)) {
-    $sigImgData = base64_encode(file_get_contents($sigImgPath));
-    $sigImgHtml = '<img src="data:image/png;base64,' . $sigImgData . '" style="height:60px;width:auto;display:block;margin:0 auto;">';
+    $raw = file_get_contents($sigImgPath);
+    if ($raw !== false && strlen($raw) > 100) {
+        $sigImgHtml = '<img src="data:image/png;base64,' . base64_encode($raw) . '" style="height:60px;">';
+    }
 }
 if ($supervisor === '__AAMIR_SIG__') {
     $supervisor = $sigImgHtml ?: 'Aamir Shehzad';
-}
-
-$chrome = CHROME_PATH;
-if (!$chrome) {
-    $chromePaths = [
-        'C:\Program Files\Google\Chrome\Application\chrome.exe',
-        'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
-        getenv('LOCALAPPDATA') . '\Google\Chrome\Application\chrome.exe',
-        '/usr/bin/google-chrome',
-        '/usr/bin/chromium-browser',
-        '/snap/bin/chromium',
-    ];
-    foreach ($chromePaths as $p) {
-        if (file_exists($p)) { $chrome = $p; break; }
-    }
-}
-if (!$chrome) {
-    die('Chrome/Chromium not found. Set CHROME_PATH in config.php.');
-}
-
-if (!file_exists($fontFile)) {
-    die('Urdu font not found: ' . $fontFile . '. Place the TTF in assets/fonts/ and set URDU_FONT in config.php.');
 }
 
 ob_start();
@@ -112,22 +90,14 @@ ob_start();
 <meta charset="utf-8">
 <title>Project Visit Report</title>
 <style>
-    @font-face {
-        font-family: 'Nastaleeq';
-        src: url('<?= $fontUrl ?>') format('truetype');
-        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
-    }
-    @page { margin: 0; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; }
     body {
-        font-family: 'Nastaleeq', 'Times New Roman', Times, serif;
         font-size: 10pt;
         color: #000;
         line-height: 1.3;
-        padding: 15pt 42pt 57pt;
     }
     .title {
-        font-family: 'Times New Roman', Times, serif;
+        font-family: dejavuserif;
         font-size: 20pt;
         font-weight: bold;
         text-align: center;
@@ -147,6 +117,10 @@ ob_start();
         border: 0.5pt solid #000;
         padding: 5px;
         vertical-align: top;
+        font-family: xbriyaz, dejavuserif;
+    }
+    table.info td b {
+        font-family: dejavuserif;
     }
     table.section {
         border-collapse: collapse;
@@ -162,9 +136,9 @@ ob_start();
         background-color: #003366;
         color: #ffffff;
         padding: 8px;
-        font-family: 'Times New Roman', Times, serif;
         font-weight: bold;
         font-size: 10pt;
+        font-family: dejavuserif;
     }
     table.witness {
         border-collapse: collapse;
@@ -176,26 +150,28 @@ ob_start();
         padding: 5px;
         vertical-align: top;
     }
+    table.witness td {
+        font-family: xbriyaz, dejavuserif;
+    }
     .witness-hdr {
         background-color: #003366;
         color: #ffffff;
         padding: 8px;
-        font-family: 'Times New Roman', Times, serif;
         font-weight: bold;
         font-size: 10pt;
+        font-family: dejavuserif;
     }
     .witness-th {
         background-color: #f0f0f0;
         padding: 5px;
-        font-family: 'Times New Roman', Times, serif;
         font-weight: bold;
         text-align: left;
+        font-family: dejavuserif;
     }
     .content-cell {
         padding: 8px;
-        min-height: 40px;
+        font-family: xbriyaz, dejavuserif;
     }
-
 </style>
 </head>
 <body>
@@ -279,7 +255,7 @@ ob_start();
     <?= $sig_rows ?>
     <tr>
         <td colspan="2"><b>Civil / Site Supervisor</b></td>
-        <td><?= $supervisor ?></td>
+        <td align="center"><?= $supervisor ?></td>
     </tr>
 </table>
 
@@ -290,62 +266,21 @@ ob_start();
 <?php
 $html = ob_get_clean();
 
-$tmpHtml = tempnam(sys_get_temp_dir(), 'pvr_') . '.html';
-file_put_contents($tmpHtml, $html);
+require_once __DIR__ . '/vendor/autoload.php';
 
-$tmpPdf = tempnam(sys_get_temp_dir(), 'pvr_') . '.pdf';
-$tmpUserData = sys_get_temp_dir() . '/chrome_' . uniqid();
+try {
+    $mpdf = new \Mpdf\Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4',
+        'margin_left' => 15,
+        'margin_right' => 15,
+        'margin_top' => 5,
+        'margin_bottom' => 20,
+    ]);
 
-$chromeUrl = 'file:///' . str_replace(['\\', ' '], ['/', '%20'], $tmpHtml);
-
-$chromeFlags = join(' ', array_map('escapeshellarg', [
-    '--headless',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--no-header-footer',
-    '--print-to-pdf-no-header',
-    '--disable-web-security',
-    '--allow-file-access-from-files',
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--user-data-dir=' . $tmpUserData,
-    '--print-to-pdf=' . $tmpPdf,
-    $chromeUrl,
-]));
-
-$cmd = '"' . $chrome . '" ' . $chromeFlags . ' 2>&1';
-exec($cmd, $output, $exitCode);
-
-if ($exitCode !== 0 || !file_exists($tmpPdf) || filesize($tmpPdf) < 1000) {
-    $err = 'PDF generation failed. Exit code: ' . $exitCode;
-    if ($output) $err .= "\nOutput:\n" . implode("\n", $output);
-    @unlink($tmpHtml);
-    @unlink($tmpPdf);
-    if (is_dir($tmpUserData)) @rmdir($tmpUserData);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output('Project_Visit_Report.pdf', 'I');
+} catch (\Mpdf\MpdfException $e) {
     header('Content-Type: text/html; charset=utf-8');
-    die('<pre>' . htmlspecialchars($err) . '</pre>');
+    die('<pre>PDF generation failed: ' . htmlspecialchars($e->getMessage()) . '</pre>');
 }
-
-$pdfContent = @file_get_contents($tmpPdf);
-if ($pdfContent === false || $pdfContent === '') {
-    @unlink($tmpHtml); @unlink($tmpPdf);
-    if (is_dir($tmpUserData)) @rmdir($tmpUserData);
-    header('Content-Type: text/html; charset=utf-8');
-    die('<pre>Failed to read generated PDF file.</pre>');
-}
-
-@unlink($tmpHtml);
-@unlink($tmpPdf);
-if (is_dir($tmpUserData)) {
-    $dit = new RecursiveDirectoryIterator($tmpUserData, RecursiveDirectoryIterator::SKIP_DOTS);
-    $rit = new RecursiveIteratorIterator($dit, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($rit as $f) {
-        $f->isDir() ? @rmdir($f->getRealPath()) : @unlink($f->getRealPath());
-    }
-    @rmdir($tmpUserData);
-}
-
-header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="Project_Visit_Report.pdf"');
-header('Content-Length: ' . strlen($pdfContent));
-echo $pdfContent;
