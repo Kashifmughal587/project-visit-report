@@ -82,22 +82,21 @@ if ($supervisor === '__AAMIR_SIG__') {
     $supervisor = $sigImgHtml ?: 'Aamir Shehzad';
 }
 
-$chrome = CHROME_PATH;
-if (!$chrome) {
-    $chromePaths = [
-        'C:\Program Files\Google\Chrome\Application\chrome.exe',
-        'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
-        getenv('LOCALAPPDATA') . '\Google\Chrome\Application\chrome.exe',
-        '/usr/bin/google-chrome',
-        '/usr/bin/chromium-browser',
-        '/snap/bin/chromium',
+$wkhtmltopdf = defined('WKHTMLTOPDF_PATH') ? WKHTMLTOPDF_PATH : '';
+if (!$wkhtmltopdf) {
+    $wkPaths = [
+        'C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe',
+        'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe',
+        getenv('LOCALAPPDATA') . '\Programs\wkhtmltopdf\bin\wkhtmltopdf.exe',
+        '/usr/local/bin/wkhtmltopdf',
+        '/usr/bin/wkhtmltopdf',
     ];
-    foreach ($chromePaths as $p) {
-        if (file_exists($p)) { $chrome = $p; break; }
+    foreach ($wkPaths as $p) {
+        if (file_exists($p)) { $wkhtmltopdf = $p; break; }
     }
 }
-if (!$chrome) {
-    die('Chrome/Chromium not found. Set CHROME_PATH in config.php.');
+if (!$wkhtmltopdf) {
+    die('wkhtmltopdf not found. Set WKHTMLTOPDF_PATH in config.php.');
 }
 
 if (!file_exists($fontFile)) {
@@ -294,26 +293,23 @@ $tmpHtml = tempnam(sys_get_temp_dir(), 'pvr_') . '.html';
 file_put_contents($tmpHtml, $html);
 
 $tmpPdf = tempnam(sys_get_temp_dir(), 'pvr_') . '.pdf';
-$tmpUserData = sys_get_temp_dir() . '/chrome_' . uniqid();
 
-$chromeUrl = 'file:///' . str_replace(['\\', ' '], ['/', '%20'], $tmpHtml);
+$wkFlags = [
+    '--enable-local-file-access',
+    '--encoding', 'utf-8',
+    '--page-size', 'A4',
+    '--margin-top', '0',
+    '--margin-right', '0',
+    '--margin-bottom', '0',
+    '--margin-left', '0',
+    '--disable-smart-shrinking',
+    '--quiet',
+];
 
-$chromeFlags = join(' ', array_map('escapeshellarg', [
-    '--headless',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--no-header-footer',
-    '--print-to-pdf-no-header',
-    '--disable-web-security',
-    '--allow-file-access-from-files',
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--user-data-dir=' . $tmpUserData,
-    '--print-to-pdf=' . $tmpPdf,
-    $chromeUrl,
-]));
-
-$cmd = '"' . $chrome . '" ' . $chromeFlags . ' 2>&1';
+$cmd = escapeshellarg($wkhtmltopdf) . ' '
+    . join(' ', array_map('escapeshellarg', $wkFlags)) . ' '
+    . escapeshellarg($tmpHtml) . ' '
+    . escapeshellarg($tmpPdf) . ' 2>&1';
 exec($cmd, $output, $exitCode);
 
 if ($exitCode !== 0 || !file_exists($tmpPdf) || filesize($tmpPdf) < 1000) {
@@ -321,7 +317,6 @@ if ($exitCode !== 0 || !file_exists($tmpPdf) || filesize($tmpPdf) < 1000) {
     if ($output) $err .= "\nOutput:\n" . implode("\n", $output);
     @unlink($tmpHtml);
     @unlink($tmpPdf);
-    if (is_dir($tmpUserData)) @rmdir($tmpUserData);
     header('Content-Type: text/html; charset=utf-8');
     die('<pre>' . htmlspecialchars($err) . '</pre>');
 }
@@ -329,21 +324,12 @@ if ($exitCode !== 0 || !file_exists($tmpPdf) || filesize($tmpPdf) < 1000) {
 $pdfContent = @file_get_contents($tmpPdf);
 if ($pdfContent === false || $pdfContent === '') {
     @unlink($tmpHtml); @unlink($tmpPdf);
-    if (is_dir($tmpUserData)) @rmdir($tmpUserData);
     header('Content-Type: text/html; charset=utf-8');
     die('<pre>Failed to read generated PDF file.</pre>');
 }
 
 @unlink($tmpHtml);
 @unlink($tmpPdf);
-if (is_dir($tmpUserData)) {
-    $dit = new RecursiveDirectoryIterator($tmpUserData, RecursiveDirectoryIterator::SKIP_DOTS);
-    $rit = new RecursiveIteratorIterator($dit, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($rit as $f) {
-        $f->isDir() ? @rmdir($f->getRealPath()) : @unlink($f->getRealPath());
-    }
-    @rmdir($tmpUserData);
-}
 
 header('Content-Type: application/pdf');
 header('Content-Disposition: inline; filename="Project_Visit_Report.pdf"');
